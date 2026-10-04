@@ -174,7 +174,7 @@ def plot(results: dict) -> None:
         ax.set_xticklabels(names, fontsize=8)
         ax.set_title(title)
         ax.grid(axis="y", alpha=0.3)
-    axes[0].legend(title="fix")
+    axes[0].legend(title="fix", loc="upper center", bbox_to_anchor=(0.5, -0.12), ncol=4)
     fig.tight_layout()
     fig.savefig(ROOT / "fixes_chart.png", dpi=150)
 
@@ -187,7 +187,7 @@ def plot(results: dict) -> None:
     ax.set_xticklabels(names, fontsize=8)
     ax.set_ylabel("Recall@5 (%)")
     ax.set_title("Same question, three ways to type it")
-    ax.legend()
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.12), ncol=3)
     ax.grid(axis="y", alpha=0.3)
     fig.tight_layout()
     fig.savefig(ROOT / "drop_chart.png", dpi=150)
