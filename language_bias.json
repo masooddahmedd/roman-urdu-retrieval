@@ -1,49 +1,49 @@
 {
  "openai": {
-  "urdu": 0.268,
-  "english": 0.796,
-  "roman_1": 0.729,
-  "roman_2": 0.734,
-  "roman_3": 0.722
+  "urdu": 0.269,
+  "english": 0.808,
+  "roman_1": 0.746,
+  "roman_2": 0.727,
+  "roman_3": 0.745
  },
  "bge-m3": {
-  "urdu": 0.134,
-  "english": 0.643,
-  "roman_1": 0.727,
-  "roman_2": 0.729,
-  "roman_3": 0.746
+  "urdu": 0.138,
+  "english": 0.641,
+  "roman_1": 0.73,
+  "roman_2": 0.738,
+  "roman_3": 0.738
  },
  "e5": {
   "urdu": 0.0,
-  "english": 0.953,
-  "roman_1": 0.329,
-  "roman_2": 0.33,
-  "roman_3": 0.348
+  "english": 0.954,
+  "roman_1": 0.315,
+  "roman_2": 0.307,
+  "roman_3": 0.305
  },
  "urdu_only_pool_recall@5": {
   "openai": {
    "urdu": 0.865,
    "english": 0.84,
-   "roman_1": 0.76,
+   "roman_1": 0.77,
    "roman_2": 0.765,
-   "roman_3": 0.75,
-   "roman_mean": 0.7583333333333333
+   "roman_3": 0.785,
+   "roman_mean": 0.7733333333333334
   },
   "bge-m3": {
    "urdu": 0.99,
-   "english": 0.96,
-   "roman_1": 0.625,
-   "roman_2": 0.63,
-   "roman_3": 0.615,
-   "roman_mean": 0.6233333333333333
+   "english": 0.955,
+   "roman_1": 0.585,
+   "roman_2": 0.56,
+   "roman_3": 0.59,
+   "roman_mean": 0.5783333333333333
   },
   "e5": {
    "urdu": 0.98,
-   "english": 0.95,
-   "roman_1": 0.78,
-   "roman_2": 0.77,
-   "roman_3": 0.765,
-   "roman_mean": 0.7716666666666666
+   "english": 0.94,
+   "roman_1": 0.745,
+   "roman_2": 0.73,
+   "roman_3": 0.745,
+   "roman_mean": 0.7400000000000001
   }
  }
 }

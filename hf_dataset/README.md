@@ -50,24 +50,22 @@ each row has the article title and page id for attribution.
 
 - Passages: Urdu and English Wikipedia articles on Pakistani topics, cut into passages of 60 to 170
   words.
-- Questions: for each of 300 sampled Urdu passages, gpt-4o wrote one specific question in Urdu
-  script, the same question in English, and three Roman Urdu spellings as different people might
-  type it. They are LLM-drafted.
-- Review: **no native-speaker review has been done.** A second-pass review by Claude (an AI model, not a native speaker) of the 50-question sample in `review_sample.csv` passed 22 and flagged 28 (variants that reword instead of respell, spelling slips, ambiguous questions, questions that refer to the passage). Corrected spellings are in the `fixed_roman_*` columns. Roughly a quarter of all questions probably have a drifted variant (automatic flag, see the repo).
+- Questions: for each of 300 sampled Urdu passages, gpt-4o wrote one specific question in Urdu script and in English. A second gpt-4o step then wrote three Roman Urdu spellings of that same Urdu sentence under a spelling-only rule (same words, same order); variant sets that differ in word count or share too few words after normalization were rejected and retried. Questions that refer to "this passage" were dropped. All of it is LLM-written.
+- Review: **no native-speaker review has been done.** An AI review (Claude, not a native speaker) of the 50-question sample in `review_sample.csv` passed 42 and flagged 8 (spelling slips such as a mangled place name, and one ungrammatical source question). Corrected spellings are in the `fixed_roman_*` columns. An earlier version of the set mixed spelling changes with word changes, and was regenerated; the archived first version is in the GitHub repo under `v1/`.
 
 ## Known limitations
 
-- The Roman Urdu spellings are LLM-written and not native-speaker reviewed. Many differ by more than spelling (a different word choice), and they are not samples of real typing.
-- Some questions say "this passage" or "here", which makes them easier than a real search query.
+- The Roman Urdu spellings are LLM-written and not native-speaker reviewed. They are GPT-4o's guess at how people type, not samples of real typing.
+- A few questions are time-sensitive or oddly worded (one source question has a grammar error).
 - One gold passage per question. Other passages may also answer it.
 - Wikipedia text only. Chat and social media Roman Urdu is likely harder.
 
 ## Results this was used for
 
 Recall@5 on the 200 test questions (full tables in the repo): moving from Urdu script to Roman Urdu
-cost bge-m3 54.5 points (99.0% to 44.5%), OpenAI text-embedding-3-large 33.2 points and
-multilingual-e5-large-instruct 27.7 points. Transliterating the query to Urdu script before
-searching recovered most of it (bge-m3 96.3%).
+cost bge-m3 59.0 points (99.0% to 40.0%), OpenAI text-embedding-3-large 32.5 points and
+multilingual-e5-large-instruct 29.2 points. Transliterating the query to Urdu script before
+searching recovered most of it (bge-m3 94.7%).
 
 ## Citation
 

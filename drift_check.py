@@ -28,7 +28,7 @@ sample_ids = [
 ]
 by_id = {q["id"]: q for q in queries}
 best = None
-for t in np.arange(0.5, 0.96, 0.05):
+for t in np.arange(0.5, 0.96, 0.05) if len(manual) >= 5 else []:
     flagged = {i for i in sample_ids if min_overlap(by_id[i]) < t}
     tp = len(flagged & manual)
     prec = tp / len(flagged) if flagged else 0
@@ -39,6 +39,10 @@ for t in np.arange(0.5, 0.96, 0.05):
     )
     if best is None or f1 > best[0]:
         best = (f1, float(t), prec, rec)
+if best is None:
+    # Too few manual drift labels to calibrate, so reuse the threshold calibrated on the first
+    # version of the set (v1/).
+    best = (0.0, 0.55, float("nan"), float("nan"))
 _, thr, prec, rec = best
 flag = {q["id"]: min_overlap(q) < thr for q in queries}
 print(
