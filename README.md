@@ -30,7 +30,7 @@ What the numbers say:
 - **Transliteration fixes most of it.** Converting the Roman Urdu query to Urdu script with gpt-4o-mini before searching brings bge-m3 to 96.3% (Urdu script is 99.0%), e5 to 97.5% (98.0%) and BM25 to 94.7% (98.0%). OpenAI embeddings get to 79.8%, which is 95% of their own Urdu-script score of 84.0%.
 - **The hybrid** (rank fusion of the original query, the transliterated query and BM25 on the transliterated query) is best for OpenAI (92.7%, above its Urdu-script baseline) and bge-m3 (98.0%). For e5 it is slightly below transliteration alone (96.5% vs 97.5%, inside the noise).
 - **Rule-based spelling normalization made things worse.** Four rules survived tuning on the dev questions (fold repeated letters, `kia`/`kiya` to `kya`, `ai`/`ay`/`ae` to `e`, `q` to `k`). Applied to the queries they cost 4 to 11 points of Recall@5 and raised the spread between spellings for the dense models. The normalized text is not how anyone writes, and the embedding models have seen natural spellings.
-- **Spelling variation is smaller than script, but real.** The gap in Recall@5 between the best and worst of the 3 spellings is only 0.5 to 1.5 points. That hides the fact that for 13.5% to 18% of questions the same question is found with one spelling and missed with another. Transliteration cuts that to between 1.0% and 6.0% for the dense models (1.0% for e5, 2.5% for bge-m3, 6.0% for OpenAI).
+- **Spelling variation is smaller than script, but real.** The gap in Recall@5 between the best and worst of the 3 spellings is only 0.5 to 1.5 points. That hides the fact that for 13.5% to 18% of questions the same question is found with one spelling and missed with another (6% to 14% on the cleaner subset described under Question quality below). Transliteration cuts that to between 1.0% and 6.0% for the dense models (1.0% for e5, 2.5% for bge-m3, 6.0% for OpenAI).
 - **Why English queries look so different across models.** The pool has 2,000 English passages on similar topics, so an English or Roman Urdu query can land on English passages instead of the Urdu one (`language_bias.json`). In the top 5 for Roman Urdu queries, English passages make up 73% for OpenAI, 73 to 75% for bge-m3 and 33 to 35% for e5. For English queries e5 returns 95% English passages, which is why its English Recall@5 is only 16.5%.
 
 ### How much of the drop is the English distractors?
@@ -49,7 +49,21 @@ Part of it. Removing the English passages from the candidate pool (`language_bia
 
 `queries.jsonl` and `queries.csv` (CC BY 4.0, see `LICENSE-DATA`): 300 questions, each with the Urdu question, the English question, three Roman Urdu spellings and the id of the Urdu passage that answers it. The Wikipedia passage text is not included (it is CC BY-SA). Run `fetch_corpus.py` to rebuild it; the ids are stable as long as the article revisions are.
 
-The questions are LLM-drafted. A native Urdu speaker is spot-checking a 50-question sample (`review_sample.csv`) for natural phrasing and spelling. Status of that check: **pending**. Treat the Roman Urdu spellings as plausible, not as verified typing habits, until that is filled in.
+The questions are LLM-drafted and **have not been reviewed by a native Urdu speaker**. Treat the Roman Urdu spellings as plausible, not as verified typing habits. See Question quality below for what a second-pass AI review found.
+
+## Question quality
+
+No native speaker has reviewed the questions. As a second check, Claude (an AI model, not a native speaker) reviewed the 50-question sample in `review_sample.csv` (`review_labels.py`): 22 passed and 28 were flagged. The flags overlap: 17 variants that reword instead of respell (for example `Government` in place of `Hukoomat`, or `kin halaat` vs `kis surat`), 9 spelling or grammar slips nobody would type, 5 ambiguous or doubtful questions and 3 that refer to the passage ("in this article", "you"). Corrected spellings are in the `fixed_roman_*` columns. The flagged questions were not removed from `queries.jsonl`.
+
+Variant drift inflates the "spellings disagree" numbers. `drift_check.py` flags questions whose three spellings share few words after normalization. It is calibrated on the manual flags (precision 0.68, recall 0.76 on those same 50, so it is rough and optimistic), flags 80 of 300, and recomputes the headline numbers on the 140 of 200 test questions it leaves clean (`drift_results.json`):
+
+| Retriever | Roman Recall@5, all 200 | Roman Recall@5, clean 140 | Spellings disagree, all | Spellings disagree, clean |
+| --- | --- | --- | --- | --- |
+| OpenAI | 50.8% | 55.0% | 13.5% | 10.7% |
+| bge-m3 | 44.5% | 48.1% | 18.0% | 14.3% |
+| e5-instruct | 70.3% | 74.3% | 14.0% | 6.4% |
+
+With transliteration, Roman Recall@5 on the clean subset is 83.6% (OpenAI), 96.7% (bge-m3) and 97.9% (e5), against 79.8%, 96.3% and 97.5% on all 200. So the conclusions hold, the disagreement rates are partly an artifact of drifted variants, and the spelling-only figure is lower than the headline 13.5% to 18%. A native-speaker pass over the full set is still the right next step.
 
 ## Run it
 
@@ -64,7 +78,7 @@ The transliterations (`cache/translit.json`) and the query drafts are cached in 
 
 ## Limitations
 
-- **LLM-drafted questions.** Some Roman Urdu spellings differ by more than spelling (a different word choice, for example). Some questions say "this passage" or "here", which makes them easier than a real search query. The native-speaker check is pending.
+- **LLM-drafted questions, no native-speaker review.** About a quarter of the questions (80 of 300 by the automatic flag below) probably have a variant that changes words and not just spelling, and a few refer to "this passage". See Question quality.
 - **One gold passage per question.** Other passages may also answer it, so Recall@5 is a lower bound.
 - **Mixed-language pool.** English distractors inflate the Roman Urdu drop (see above). A purely Urdu pool is the other half of the picture.
 - **200 test questions.** The intervals above are wide enough that differences of a few points between models should not be read as a ranking.

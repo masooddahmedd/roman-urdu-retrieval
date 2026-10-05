@@ -34,7 +34,7 @@ measures how much Roman Urdu spelling and script hurt embedding search and RAG.
 | File | What it is | License |
 | --- | --- | --- |
 | `queries.jsonl`, `queries.csv` | 300 questions (100 dev, 200 test) | CC BY 4.0 |
-| `review_sample.csv` | The 50 questions sampled for native-speaker review | CC BY 4.0 |
+| `review_sample.csv` | 50 sampled questions with an AI review (flags, notes, corrected spellings) | CC BY 4.0 |
 | `corpus.jsonl` | 3,674 Wikipedia passages (1,674 Urdu, 2,000 English) the answers come from | CC BY-SA 4.0 (Wikipedia contributors) |
 
 The CC BY license covers the queries. `corpus.jsonl` is Wikipedia text and stays CC BY-SA 4.0;
@@ -53,13 +53,11 @@ each row has the article title and page id for attribution.
 - Questions: for each of 300 sampled Urdu passages, gpt-4o wrote one specific question in Urdu
   script, the same question in English, and three Roman Urdu spellings as different people might
   type it. They are LLM-drafted.
-- Human review: a native Urdu speaker is checking the 50-question sample in `review_sample.csv`
-  for natural phrasing and spelling. Status: **[pending: update when done]**.
+- Review: **no native-speaker review has been done.** A second-pass review by Claude (an AI model, not a native speaker) of the 50-question sample in `review_sample.csv` passed 22 and flagged 28 (variants that reword instead of respell, spelling slips, ambiguous questions, questions that refer to the passage). Corrected spellings are in the `fixed_roman_*` columns. Roughly a quarter of all questions probably have a drifted variant (automatic flag, see the repo).
 
 ## Known limitations
 
-- The Roman Urdu spellings are LLM-written. Some differ by more than spelling (a different word
-  choice), and they are not samples of real typing.
+- The Roman Urdu spellings are LLM-written and not native-speaker reviewed. Many differ by more than spelling (a different word choice), and they are not samples of real typing.
 - Some questions say "this passage" or "here", which makes them easier than a real search query.
 - One gold passage per question. Other passages may also answer it.
 - Wikipedia text only. Chat and social media Roman Urdu is likely harder.
