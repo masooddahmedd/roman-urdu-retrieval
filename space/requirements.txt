@@ -1,6 +1,0 @@
-gradio
-numpy
-onnxruntime
-tokenizers
-huggingface_hub
-openai
