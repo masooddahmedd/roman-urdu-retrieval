@@ -145,7 +145,7 @@ rows = []
 for n in BB_ORDER:
     rows.append(f"{NAMES[n]} & " + " & ".join(pct(r5(bb[n], k)) for k, _ in BB_COLS) + " \\\\")
 t3 = (
-    "\\begin{table}[t]\\centering\\small\\setlength{\\tabcolsep}{3pt}\n\\begin{tabular}{l"
+    "\\begin{table*}[t]\\centering\\small\n\\begin{tabular}{l"
     + "r" * len(BB_COLS)
     + "}\\toprule\n"
     "Retriever & "
@@ -155,7 +155,7 @@ t3 = (
     + "\n\\bottomrule\\end{tabular}\n"
     "\\caption{Recall@5 (\\%) on the Belebele retrieval split (\\BbNQueries{} questions, "
     "\\BbNPassages{} Urdu-script passages, human-romanized Roman Urdu).}\\label{tab:belebele}\n"
-    "\\end{table}\n"
+    "\\end{table*}\n"
 )
 
 # Error analysis macros (gpt-4o-mini transliteration, Wikipedia set).
