@@ -1,5 +1,7 @@
 # roman-urdu-retrieval
 
+**Paper:** Masood Ahmed (2026). *Roman Urdu Breaks Dense Retrieval: Script, Spelling Variation and a Transliteration Fix.* Preprint, Zenodo. [doi:10.5281/zenodo.24384589](https://doi.org/10.5281/zenodo.24384589)
+
 A Roman Urdu retrieval benchmark: how much does it hurt semantic search and RAG when someone types an Urdu question in Latin letters (and spells it however they like) instead of Urdu script. We measure BM25, bge-m3, multilingual-e5-large-instruct and OpenAI text-embedding-3-large on 200 test questions, then test three fixes. The short version: the drop is large, spelling variation is a smaller problem than script, and transliterating the query to Urdu script before searching fixes most of it.
 
 ![Roman Urdu Recall@5 before and after each fix](fixes_chart.png)
