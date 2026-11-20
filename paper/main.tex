@@ -1,0 +1,104 @@
+% Roman Urdu retrieval paper. Build: tectonic main.tex (or pdflatex + bibtex).
+% Every number in the tables and in numbers.tex is written by make_tables.py from the result
+% JSON files; do not type numbers into this file by hand.
+\documentclass[11pt]{article}
+\usepackage[final]{acl}
+\usepackage{times}
+\usepackage{latexsym}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{inconsolata}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+\input{numbers.tex}
+
+\title{Roman Urdu Breaks Dense Retrieval:\\Script, Spelling Variation and a Transliteration Fix}
+
+\author{Masood Ahmad \\
+  \textcolor{red}{[AFFILIATION?]}, Islamabad, Pakistan \\
+  \texttt{\textcolor{red}{[EMAIL?]}}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Most Urdu speakers type Urdu in the Latin script (Roman Urdu), and nobody spells it the same way twice, while the text they want to search is written in Urdu script. We measure what this does to retrieval. On a new set of \WikiNTest{} test questions over \WikiNPassages{} Wikipedia passages, each question asked in Urdu script, in English and in three Roman Urdu spellings, every dense embedder we test loses between \WikiDropMin{} and \WikiDropMax{} points of Recall@5 when the question moves from Urdu script to Roman Urdu, and BM25 finds almost nothing. A second test with human-written Roman Urdu questions from Belebele shows a similar gap (\BbDropMin{} to \BbDropMax{} points), although there the Roman Urdu is also worded differently. Spelling variation is a smaller effect than script, but for up to \WikiDisagreeMax{} of questions one spelling finds the answer and another misses it. Rule-based spelling normalization makes things worse. Transliterating the query into Urdu script before searching closes most of the gap: with an LLM transliterator the best embedders come within a few points of their Urdu-script score, and a small open transliteration model recovers \MtwoMShare{} of the LLM's gain without an API call, while a general 7B open LLM does markedly worse. We release the question set and code.
+\end{abstract}
+
+\section{Introduction}
+
+Urdu has over 200 million speakers, and most of them type it on phones and keyboards in the Latin script. ``Kya Lahore mein aaj barish hogi?'' is how a question about rain in Lahore actually gets typed; the Urdu-script form is reserved for formal text. This Latin-script Urdu, Roman Urdu, has no standard spelling: the same word appears as \textit{kya}, \textit{kia} and \textit{kyaa}, \textit{hai} and \textit{hay}, \textit{mein} and \textit{main}.
+
+The documents a search or retrieval-augmented generation (RAG) system would retrieve, on the other hand, are mostly in Urdu script: news, Wikipedia, government and religious text. A Roman Urdu question against an Urdu-script index is therefore a cross-script problem first and a spelling problem second. Lexical retrievers fail by construction, since the two scripts share no characters. Multilingual dense embedders are trained mostly on native-script text, and how well they bridge the gap has, to our knowledge, not been measured for Urdu.
+
+We ask three questions:
+\begin{enumerate}
+\item How much retrieval quality is lost when the same question is typed in Roman Urdu instead of Urdu script, across lexical, open and commercial embedders?
+\item How much of that loss comes from spelling variation, as opposed to the script itself?
+\item Which cheap fixes recover it: spelling normalization, query transliteration with an LLM or a small dedicated model, or rank fusion?
+\end{enumerate}
+
+Our contributions are (i) a 300-question benchmark in which every question has an Urdu-script, an English and three Roman Urdu forms that differ only in spelling, over a bilingual Wikipedia pool; (ii) an evaluation of \NRetrievers{} retrievers on it and on a retrieval version of Belebele's human-romanized Urdu \citep{bandarkar2024belebele}; and (iii) a comparison of fixes, with an error analysis of what still fails. The question set (CC BY 4.0) and all code are public.\footnote{\url{https://github.com/masooddahmedd/roman-urdu-retrieval}}
+
+\section{Related work}
+
+\paragraph{Mixed-script and transliterated search.} The FIRE shared tasks on transliterated and mixed-script search \citep{saharoy2013fire,banerjee2020msir} established, for Hindi song lyrics and web queries, that spelling variation of romanized text is the central difficulty, and \citet{gupta2014msir} addressed it with query expansion over a learned space of variants. That line of work predates dense retrieval. \citet{chari2025lost} show that BGE-M3 and a multilingual reranker collapse on romanized queries for Chinese and Russian and fix it by fine-tuning on mixed native and romanized queries; we study Urdu, include spelling variation, and fix the query instead of the model. \citet{singh2026romanizations} measure how stable multilingual representations are under many informal romanizations of Bengali, Hindi, Tamil and Telugu. \citet{husain2024romansetu} show that LLMs handle romanized Indic text well internally, which is consistent with our finding that an LLM transliterates Roman Urdu reliably even when embedders cannot read it.
+
+\paragraph{Roman Urdu.} Roman Urdu spelling variation has been studied for lexical normalization \citep{rafae2015unsupervised,khan2022clustering} and language identification \citep{benton2025informal}. Parallel Roman Urdu and Urdu resources include Roman-Urdu-Parl \citep{alam2022romanurduparl} and the Dakshina dataset \citep{roark2020dakshina}, and \citet{butt2025translit} fine-tune m2m100 on them for transliteration; we use their released model as our non-LLM transliterator. \citet{butt2025romanurduir} build the first Roman Urdu IR dataset by machine-translating and machine-transliterating MS MARCO, which gives Roman Urdu queries against Roman Urdu passages with one machine spelling; our setting is Roman Urdu queries against Urdu-script passages with several spellings. MTEB's BelebeleRetrieval task \citep{muennighoff2023mteb,enevoldsen2025mmteb} contains a Roman Urdu to Urdu-script pair; we build an equivalent split directly from Belebele and report it alongside our set.
+
+\paragraph{Query translation for multilingual RAG.} Translating the query into the language of the collection is a standard baseline in multilingual RAG \citep{chirkova2024mrag,ranaldi2026mrag}, retrievers prefer passages in the query's own language \citep{park2025language}, and LLM query rewriting is a general tool for RAG \citep{ma2023queryrewriting}. Transliteration is the narrower, script-only version of the same idea: the language does not change, only the alphabet.
+
+\section{Benchmark}
+
+\paragraph{Passages.} We take Urdu and English Wikipedia articles on Pakistani topics and cut them into passages of 60 to 170 words, up to four per article, giving \WikiNUrduPassages{} Urdu and \WikiNEnglishPassages{} English passages. Urdu Wikipedia ran out of long enough articles on these topics before 2{,}000. The English passages are distractors on similar topics: a Roman Urdu query shares its alphabet, names and many loanwords with English, so a bilingual pool tests whether a retriever matches meaning or merely matches script.
+
+\paragraph{Questions.} For a random sample of Urdu passages, GPT-4o writes one specific question answered by the passage, in Urdu script and in English. A second call then writes three Roman Urdu spellings of the same Urdu sentence, under the constraint that only spelling may differ: same words, same order (for example \textit{ke}/\textit{kay}/\textit{k}, \textit{mein}/\textit{main}). Questions that refer to ``this passage'' are dropped, and a variant set is rejected and regenerated if its spellings differ in word count or share too few words after normalization. This gives 300 questions, split into 100 for development and 200 for test. The gold passage of each question is the Urdu passage it was written from.
+
+\paragraph{Quality control.} An earlier version that generated all forms in one call often reworded instead of respelling (for example \textit{Government} in place of \textit{Hukoomat}), which conflates spelling with paraphrase. With the two-step process, an AI review of a 50-question sample flagged 8 questions, 7 of them for a misspelled name and one for an ungrammatical source question, and only 1 of 50 had a variant that changed a word; an automatic word-overlap check flags 2 of 300. Removing flagged questions changes no reported number by more than one point. The questions have not yet been reviewed in full by a native speaker; we treat the spellings as plausible rather than as attested typing habits, which is the main reason we add the human-romanized Belebele set below.
+
+\paragraph{Belebele retrieval split.} Belebele \citep{bandarkar2024belebele} gives the same 900 reading-comprehension questions over 488 FLORES-200 passages in Urdu script (\texttt{urd\_Arab}), romanized Urdu (\texttt{urd\_Latn}) and English. The romanized variant was produced by human annotators with the help of the IndicXlit transliterator \citep{madhani2023aksharantar}. We use each question as a query, the 488 Urdu-script passages as the pool (no English distractors), and the passage the question was written for as gold. Two caveats shape how we read this set. First, the questions are written about a passage rather than for search, so absolute scores are not comparable with the Wikipedia set. Second, the Roman Urdu questions are not word-for-word romanizations of the Urdu-script ones: the same question opens \textit{Ebarat key hisaab sey} (``according to the text'') in Roman Urdu and with a different phrase meaning ``according to the passage'' in Urdu script, and word choice differs throughout. The Urdu-script to Roman Urdu gap on Belebele therefore mixes script with rewording, and it is an upper bound on the effect of script alone. Its value is that the Roman Urdu was written by people, with one spelling per question.
+
+\section{Retrievers and fixes}
+
+\paragraph{Retrievers.} BM25 \citep{robertson2009bm25} with Arabic-letter folding; the open embedders bge-m3 \citep{chen2024bgem3} and multilingual-e5-large-instruct \citep{wang2024me5}, both strong on multilingual retrieval in MMTEB \citep{enevoldsen2025mmteb}, run through their official ONNX exports on CPU; and OpenAI text-embedding-3-large at 1{,}024 dimensions \citep{openai2024embeddings}. Each model uses its documented query prefix or instruction. Inputs are truncated at 400 tokens. OpenAI embeddings are reported on the Wikipedia set only.
+
+\paragraph{Fixes.} All fixes change only the Roman Urdu query.
+\begin{itemize}
+\item \textbf{Spelling normalization.} Seven candidate rules (fold repeated letters, \textit{kia}/\textit{kiya}$\rightarrow$\textit{kya}, \textit{ai}/\textit{ay}/\textit{ae}$\rightarrow$\textit{e}, \textit{ph}$\rightarrow$\textit{f}, \textit{w}$\rightarrow$\textit{v}, \textit{q}$\rightarrow$\textit{k}, drop a word-final \textit{h} after a vowel), kept greedily if they raise agreement between the three spellings of the development questions. \WikiNRules{} rules survive.
+\item \textbf{LLM transliteration.} gpt-4o-mini at temperature 0 converts the query to Urdu script with a one-sentence instruction (Appendix~\ref{app:prompt}). We also run the same prompt with the open Qwen2.5-7B-Instruct \citep{qwen2025qwen25}.
+\item \textbf{Model transliteration.} The m2m100-418M Roman Urdu to Urdu model released with \citet{butt2025translit}, beam size 4. The release has no model card, so we chose the source-language code (\texttt{ur}) by comparing outputs on four questions.
+\item \textbf{Hybrid.} Reciprocal rank fusion \citep{cormack2009rrf} of three rankings: the embedder on the transliterated query, the embedder on the raw Roman Urdu query, and BM25 on the transliterated query.
+\end{itemize}
+
+\paragraph{Metrics.} Recall@5 (the gold passage is in the top five), MRR@10, and, across the three spellings, the share of questions where the spellings disagree, i.e.\ at least one spelling hits and at least one misses. Confidence intervals are 95\% bootstrap intervals over questions. Rules are chosen on development questions; all numbers are on test questions.
+
+\section{Results}
+
+\input{results_text.tex}
+
+\section{Limitations}
+
+The Wikipedia questions are LLM-drafted and their spellings are not attested typing. The human-written Belebele split only partly addresses this: it has one spelling per question, its romanization was assisted by a transliteration tool, and its Roman Urdu questions are worded differently from the Urdu-script ones, so its gap mixes script with rewording. We test two open embedders and one commercial one; newer multilingual embedders may narrow the gap, and OpenAI embeddings and gpt-4o-mini transliteration are reported on the Wikipedia set only. Each question has one gold passage, so Recall@5 is a lower bound. With 200 and 900 test questions, differences of a few points are within noise. Wikipedia and FLORES text are formal; chat and social-media Roman Urdu, which mixes in English words and abbreviations, is likely harder. Every transliterator adds a model call per query; we report the latency of the two open ones but not of gpt-4o-mini, and not a full cost model.
+
+\section{Conclusion}
+
+Typing Urdu in the Latin script costs current embedders between a third and almost all of their retrieval quality, and most of that is the script, not the spelling. The fix is cheap and model-agnostic: convert the query to Urdu script before searching. Teams building search or RAG for Pakistani users should transliterate Roman Urdu queries, and embedding benchmarks for South Asian languages should include romanized queries.
+
+\section*{Use of AI}
+Experiments were run and this manuscript was drafted with the help of an AI coding assistant; the author checked every number against the released result files and is responsible for the content. The benchmark questions were drafted by GPT-4o as described above.
+
+\bibliography{references}
+
+\appendix
+\section{Transliteration prompt}
+\label{app:prompt}
+\begin{quote}\small
+Convert this Roman Urdu text to Urdu script. Keep the meaning and word order, use standard Urdu spelling, and keep names as they would be written in Urdu. Output only the Urdu text.
+\end{quote}
+
+\input{appendix_tables.tex}
+
+\end{document}

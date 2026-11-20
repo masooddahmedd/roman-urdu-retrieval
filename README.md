@@ -37,6 +37,14 @@ What the numbers say:
 
 Part of it. Removing the English passages from the candidate pool (`language_bias.py`) gives Roman Urdu Recall@5 of 77.3% for OpenAI (Urdu script 86.5%), 57.8% for bge-m3 (99.0%) and 74.0% for e5 (98.0%). So the gap shrinks to between 9 and 41 points, but it does not go away. Roman Urdu is hard for these models even without a bilingual pool.
 
+## Update, November 2026: second test set, free transliterators, paper
+
+- **Human-written Roman Urdu (Belebele).** `belebele.py` turns Belebele's 900 questions (Urdu script, Roman Urdu written by annotators, English) over 488 Urdu passages into a retrieval test. Recall@5 falls from 94.3% (Urdu script) to 43.0% (Roman Urdu) for bge-m3 and from 93.7% to 53.7% for e5. Belebele's Roman Urdu questions are worded differently from its Urdu-script ones, so this gap mixes script with rewording.
+- **No-API transliteration.** The m2m100 Roman Urdu to Urdu model from Butt et al. (2025) (`translit_m2m.py`) brings Roman Urdu Recall@5 on the Wikipedia set to 91.8% (bge-m3) and 93.0% (e5), about 90% of the gain gpt-4o-mini gives. Qwen2.5-7B-Instruct through Ollama (`translit_open.py`) reaches 81.7% and 85.7%; 27% of its outputs contain Devanagari or Cyrillic letters.
+- **Error analysis** (`error_analysis.py`, `translit_quality.py`): most misses left after transliteration are names written differently from the passage.
+- **Bug fix.** `gold_ranks` used to break score ties in favour of the gold passage, so a BM25 query sharing no word with any passage counted as a hit. Ties now count against it. This changed no number on the Wikipedia set; it only mattered for BM25 on Belebele's Urdu-only pool.
+- **Paper draft** in `paper/`. `paper_results.py`, `belebele.py run` and `make_tables.py` write every number in it.
+
 ## How it works
 
 1. `fetch_corpus.py` pulls Urdu and English Wikipedia articles on Pakistani topics and cuts them into passages of 60 to 170 words (up to 4 per article).
@@ -91,4 +99,4 @@ The transliterations (`cache/translit.json`) and the question drafts are cached 
 - Text: Urdu and English Wikipedia, CC BY-SA 4.0.
 - Related work on Roman Urdu normalization and transliteration, for example [A Clustering Framework for Lexical Normalization of Roman Urdu](https://arxiv.org/abs/2004.00088) and [Low-Resource Transliteration for Roman-Urdu and Urdu](https://arxiv.org/abs/2503.21530). I did not find an existing benchmark that measures gold-passage recall across embedding models for Roman Urdu, but my search was quick, so I do not claim this is the first.
 
-Code is MIT (`LICENSE`). The query set is CC BY 4.0 (`LICENSE-DATA`).
+Code is MIT (`LICENSE`). The query set is CC BY 4.0 (`LICENSE-DATA`). `cache/translit_open.json` and `cache/translit_m2m.json` also contain Belebele questions (Bandarkar et al., 2024), which are CC BY-SA 4.0.

@@ -58,37 +58,43 @@ def select_rules(dev_variants: list[list[str]], min_gain: float = 0.002) -> list
     return chosen
 
 
-def transliterate(queries: list[str]) -> list[str]:
+def transliterate(queries: list[str], cached_only: bool = False) -> list[str]:
     # Roman Urdu to Urdu script with an LLM. Temperature 0 and a disk cache so reruns are free.
+    # cached_only returns "" for anything not cached instead of calling the API.
     cache = json.loads(CACHE.read_text(encoding="utf-8")) if CACHE.exists() else {}
     missing = [q for q in dict.fromkeys(queries) if q not in cache]
+    if cached_only:
+        return [cache.get(q, "") for q in queries]
     if missing:
+        from concurrent.futures import ThreadPoolExecutor
+
         from dotenv import load_dotenv
         from openai import OpenAI
 
         load_dotenv()
         client = OpenAI(max_retries=5)
-        for q in missing:
+
+        def one(q: str) -> str:
             resp = client.chat.completions.create(
                 model=TRANSLIT_MODEL,
                 temperature=0,
-                messages=[
-                    {
-                        "role": "user",
-                        "content": (
-                            "Convert this Roman Urdu text to Urdu script. Keep the meaning and "
-                            "word order, "
-                            "use standard Urdu spelling, and keep names as they would be "
-                            "written in Urdu. "
-                            f"Output only the Urdu text.\n\n{q}"
-                        ),
-                    }
-                ],
+                messages=[{"role": "user", "content": TRANSLIT_PROMPT.format(q=q)}],
             )
-            cache[q] = resp.choices[0].message.content.strip()
+            return resp.choices[0].message.content.strip()
+
+        with ThreadPoolExecutor(8) as pool:
+            for q, out in zip(missing, pool.map(one, missing)):
+                cache[q] = out
         CACHE.parent.mkdir(parents=True, exist_ok=True)
         CACHE.write_text(json.dumps(cache, ensure_ascii=False, indent=0), encoding="utf-8")
     return [cache[q] for q in queries]
+
+
+TRANSLIT_PROMPT = (
+    "Convert this Roman Urdu text to Urdu script. Keep the meaning and word order, use standard "
+    "Urdu spelling, and keep names as they would be written in Urdu. Output only the Urdu text."
+    "\n\n{q}"
+)
 
 
 def rrf(score_matrices: list[np.ndarray], k: int = 60) -> np.ndarray:

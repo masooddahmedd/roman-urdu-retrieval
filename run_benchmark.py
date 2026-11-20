@@ -29,9 +29,11 @@ def load_data():
 
 
 def gold_ranks(scores: np.ndarray, gold_idx: list[int]) -> np.ndarray:
-    # Rank (1 is best) of the gold passage for each query among all passages.
+    # Rank (1 is best) of the gold passage for each query among all passages. Ties count against
+    # the gold passage: when BM25 shares no word with any passage every score is 0, and an
+    # optimistic tie-break would put the gold passage first.
     gold_scores = scores[np.arange(len(gold_idx)), gold_idx]
-    return (scores > gold_scores[:, None]).sum(axis=1) + 1
+    return (scores >= gold_scores[:, None]).sum(axis=1)
 
 
 def hits(ranks: np.ndarray) -> np.ndarray:

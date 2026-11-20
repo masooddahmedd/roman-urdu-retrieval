@@ -12,3 +12,14 @@ LINKEDIN_PROJECT.md
 cache/emb/
 hf_dataset/stage/
 POST_DRAFT_X.md
+cache/texts_*.jsonl
+cache/m2m_*
+cache/pipeline.log
+cache/results_before_tiefix.json
+cache/ranks_belebele.json
+paper/*.zip
+paper/*.pdf
+paper/*.aux
+paper/*.log
+paper/*.bbl
+paper/*.blg

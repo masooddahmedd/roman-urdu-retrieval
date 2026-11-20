@@ -4,6 +4,7 @@
 # The open models run through their official ONNX exports on CPU (PyTorch is not needed), and every
 # embedding is cached by text, so reruns and new query variants only embed what is new.
 import hashlib
+import os
 import re
 from pathlib import Path
 
@@ -186,7 +187,79 @@ class OpenAIEmbedding(DenseRetriever):
         return [v / np.linalg.norm(v) for v in vecs]
 
 
+QUERY_INSTRUCTION = "Given a question, retrieve the Wikipedia passage that answers it"
+
+# Newer open embedders, run through sentence-transformers. These were embedded on a GPU box with
+# embed_remote.py and the caches copied back, so on the laptop they read from cache/emb only.
+# name: (Hugging Face id, query prefix, passage prefix, trust_remote_code, extra encode kwargs)
+ST_MODELS = {
+    "qwen3-emb-0.6b": (
+        "Qwen/Qwen3-Embedding-0.6B",
+        f"Instruct: {QUERY_INSTRUCTION}\nQuery:",
+        "",
+        False,
+        {},
+    ),
+    "arctic-embed-l-v2": ("Snowflake/snowflake-arctic-embed-l-v2.0", "query: ", "", False, {}),
+    "gte-multilingual-base": ("Alibaba-NLP/gte-multilingual-base", "", "", True, {}),
+    "jina-v3": ("jinaai/jina-embeddings-v3", "", "", True, {"task": "retrieval"}),
+    "labse": ("sentence-transformers/LaBSE", "", "", False, {}),
+    "mpnet-multilingual": (
+        "sentence-transformers/paraphrase-multilingual-mpnet-base-v2",
+        "",
+        "",
+        False,
+        {},
+    ),
+}
+
+
+class STRetriever(DenseRetriever):
+    model = None
+
+    def embed_missing(self, texts: list[str], kind: str) -> list[np.ndarray]:
+        hf_id, q_prefix, p_prefix, trust, extra = ST_MODELS[self.name]
+        if os.environ.get("RUR_CACHE_ONLY"):
+            raise RuntimeError(f"{self.name}: {len(texts)} {kind} texts not in cache")
+        if self.model is None:
+            import torch
+            from sentence_transformers import SentenceTransformer
+
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+            local = os.environ.get("RUR_MODEL_DIR")  # offline copies, see embed_remote.py
+            path = os.path.join(local, hf_id.split("/")[-1]) if local else hf_id
+            self.model = SentenceTransformer(path, device=device, trust_remote_code=trust)
+            self.model.max_seq_length = MAX_TOKENS
+            if device == "cuda":
+                self.model.half()
+        prefix = q_prefix if kind == "query" else p_prefix
+        kwargs = {}
+        if "task" in extra:  # jina-v3 picks a LoRA adapter per side
+            kwargs = {"task": f"{extra['task']}.{kind}", "prompt_name": f"{extra['task']}.{kind}"}
+        vecs = self.model.encode(
+            [prefix + t for t in texts], batch_size=16, normalize_embeddings=True, **kwargs
+        )
+        return list(np.asarray(vecs, dtype=np.float32))
+
+
+def st_class(name: str) -> type:
+    return type(name, (STRetriever,), {"name": name})
+
+
+class OpenAISmall(OpenAIEmbedding):
+    name = "openai-text-embedding-3-small"
+    model = "text-embedding-3-small"
+    dimensions = 1536
+
+
 def build_retrievers(passages: list[dict], names: list[str] | None = None) -> dict:
-    classes = {"bm25": BM25Retriever, "bge-m3": BgeM3, "e5": E5Instruct, "openai": OpenAIEmbedding}
-    chosen = names or list(classes)
+    classes = {
+        "bm25": BM25Retriever,
+        "bge-m3": BgeM3,
+        "e5": E5Instruct,
+        "openai": OpenAIEmbedding,
+        "openai-small": OpenAISmall,
+        **{n: st_class(n) for n in ST_MODELS},
+    }
+    chosen = names or ["bm25", "bge-m3", "e5", "openai"]
     return {n: classes[n](passages) for n in chosen}

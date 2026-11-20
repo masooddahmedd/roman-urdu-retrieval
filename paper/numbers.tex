@@ -1,0 +1,191 @@
+% Written by make_tables.py. Do not edit.
+\newcommand{\WikiNTest}{200}
+\newcommand{\WikiNPassages}{3{,}674}
+\newcommand{\WikiNRules}{5}
+\newcommand{\WikiNUrduPassages}{1{,}674}
+\newcommand{\WikiNEnglishPassages}{2{,}000}
+\newcommand{\NRetrievers}{4}
+\newcommand{\BbNQueries}{900}
+\newcommand{\BbNPassages}{488}
+\newcommand{\WikiDropMin}{29}
+\newcommand{\WikiDropMax}{59}
+\newcommand{\WikiDisagreeMax}{14\%}
+\newcommand{\BbDropMin}{40}
+\newcommand{\BbDropMax}{51}
+\newcommand{\MtwoMShare}{90\%}
+\newcommand{\TrJaccard}{0.89}
+\newcommand{\TrExact}{46\%}
+\newcommand{\ErrBgeMiss}{32}
+\newcommand{\ErrBgeUrduAlso}{6}
+\newcommand{\ErrBgePairs}{600}
+\newcommand{\ErrBgeLowOverlap}{86.6}
+\newcommand{\ErrBgeHighOverlap}{97.2}
+\newcommand{\ErrEfiveMiss}{17}
+\newcommand{\ErrEfiveUrduAlso}{9}
+\newcommand{\ErrEfivePairs}{600}
+\newcommand{\ErrEfiveLowOverlap}{97.6}
+\newcommand{\ErrEfiveHighOverlap}{97.5}
+\newcommand{\ErrOpenaiMiss}{123}
+\newcommand{\ErrOpenaiUrduAlso}{93}
+\newcommand{\ErrOpenaiPairs}{600}
+\newcommand{\ErrOpenaiLowOverlap}{73.2}
+\newcommand{\ErrOpenaiHighOverlap}{81.5}
+\newcommand{\ErrBmtfMiss}{22}
+\newcommand{\ErrBmtfUrduAlso}{9}
+\newcommand{\ErrBmtfPairs}{600}
+\newcommand{\ErrBmtfLowOverlap}{89.8}
+\newcommand{\ErrBmtfHighOverlap}{98.1}
+\newcommand{\ErrNHighOverlap}{471}
+\newcommand{\ErrNLowOverlap}{127}
+\newcommand{\EnShareBgeM}{74\%}
+\newcommand{\EnShareMeLargeInstruct}{31\%}
+\newcommand{\EnShareOpenaiLarge}{74\%}
+\makeatletter
+\newcommand{\res}[1]{\@ifundefined{res@#1}{\textcolor{red}{??#1}}{\csname res@#1\endcsname}}
+\expandafter\def\csname res@wiki/bm25/none\endcsname{1.0}
+\expandafter\def\csname res@wiki/bm25/none/disagree\endcsname{0.0}
+\expandafter\def\csname res@wiki/bm25/normalize\endcsname{0.7}
+\expandafter\def\csname res@wiki/bm25/normalize/disagree\endcsname{0.5}
+\expandafter\def\csname res@wiki/bm25/translit\endcsname{96.3}
+\expandafter\def\csname res@wiki/bm25/translit/disagree\endcsname{2.0}
+\expandafter\def\csname res@wiki/bm25/translit_open\endcsname{68.0}
+\expandafter\def\csname res@wiki/bm25/translit_open/disagree\endcsname{21.0}
+\expandafter\def\csname res@wiki/bm25/translit_m2m\endcsname{91.8}
+\expandafter\def\csname res@wiki/bm25/translit_m2m/disagree\endcsname{3.5}
+\expandafter\def\csname res@wiki/bm25/urdu\endcsname{98.5}
+\expandafter\def\csname res@wiki/bm25/english\endcsname{1.0}
+\expandafter\def\csname res@wiki/bm25/drop\endcsname{97.5}
+\expandafter\def\csname res@wiki/bm25/pool\endcsname{8.7}
+\expandafter\def\csname res@wiki/bm25/pool/urdu\endcsname{98.5}
+\expandafter\def\csname res@wiki/bm25/enshare\endcsname{100}
+\expandafter\def\csname res@wiki/bm25/enshare/english\endcsname{100}
+\expandafter\def\csname res@wiki/bge-m3/none\endcsname{40.0}
+\expandafter\def\csname res@wiki/bge-m3/none/disagree\endcsname{9.0}
+\expandafter\def\csname res@wiki/bge-m3/normalize\endcsname{35.2}
+\expandafter\def\csname res@wiki/bge-m3/normalize/disagree\endcsname{7.5}
+\expandafter\def\csname res@wiki/bge-m3/translit\endcsname{94.7}
+\expandafter\def\csname res@wiki/bge-m3/translit/disagree\endcsname{0.5}
+\expandafter\def\csname res@wiki/bge-m3/translit_hybrid\endcsname{96.5}
+\expandafter\def\csname res@wiki/bge-m3/translit_hybrid/disagree\endcsname{2.5}
+\expandafter\def\csname res@wiki/bge-m3/translit_open\endcsname{81.7}
+\expandafter\def\csname res@wiki/bge-m3/translit_open/disagree\endcsname{21.5}
+\expandafter\def\csname res@wiki/bge-m3/translit_open_hybrid\endcsname{84.0}
+\expandafter\def\csname res@wiki/bge-m3/translit_open_hybrid/disagree\endcsname{14.0}
+\expandafter\def\csname res@wiki/bge-m3/translit_m2m\endcsname{91.8}
+\expandafter\def\csname res@wiki/bge-m3/translit_m2m/disagree\endcsname{3.0}
+\expandafter\def\csname res@wiki/bge-m3/translit_m2m_hybrid\endcsname{94.7}
+\expandafter\def\csname res@wiki/bge-m3/translit_m2m_hybrid/disagree\endcsname{5.0}
+\expandafter\def\csname res@wiki/bge-m3/urdu\endcsname{99.0}
+\expandafter\def\csname res@wiki/bge-m3/english\endcsname{80.5}
+\expandafter\def\csname res@wiki/bge-m3/drop\endcsname{59.0}
+\expandafter\def\csname res@wiki/bge-m3/pool\endcsname{57.8}
+\expandafter\def\csname res@wiki/bge-m3/pool/urdu\endcsname{99.0}
+\expandafter\def\csname res@wiki/bge-m3/enshare\endcsname{74}
+\expandafter\def\csname res@wiki/bge-m3/enshare/english\endcsname{64}
+\expandafter\def\csname res@wiki/e5/none\endcsname{68.8}
+\expandafter\def\csname res@wiki/e5/none/disagree\endcsname{12.5}
+\expandafter\def\csname res@wiki/e5/normalize\endcsname{63.8}
+\expandafter\def\csname res@wiki/e5/normalize/disagree\endcsname{8.5}
+\expandafter\def\csname res@wiki/e5/translit\endcsname{97.2}
+\expandafter\def\csname res@wiki/e5/translit/disagree\endcsname{0.5}
+\expandafter\def\csname res@wiki/e5/translit_hybrid\endcsname{96.3}
+\expandafter\def\csname res@wiki/e5/translit_hybrid/disagree\endcsname{2.0}
+\expandafter\def\csname res@wiki/e5/translit_open\endcsname{85.7}
+\expandafter\def\csname res@wiki/e5/translit_open/disagree\endcsname{14.5}
+\expandafter\def\csname res@wiki/e5/translit_open_hybrid\endcsname{89.2}
+\expandafter\def\csname res@wiki/e5/translit_open_hybrid/disagree\endcsname{9.5}
+\expandafter\def\csname res@wiki/e5/translit_m2m\endcsname{93.0}
+\expandafter\def\csname res@wiki/e5/translit_m2m/disagree\endcsname{3.0}
+\expandafter\def\csname res@wiki/e5/translit_m2m_hybrid\endcsname{96.3}
+\expandafter\def\csname res@wiki/e5/translit_m2m_hybrid/disagree\endcsname{2.5}
+\expandafter\def\csname res@wiki/e5/urdu\endcsname{98.0}
+\expandafter\def\csname res@wiki/e5/english\endcsname{16.5}
+\expandafter\def\csname res@wiki/e5/drop\endcsname{29.2}
+\expandafter\def\csname res@wiki/e5/pool\endcsname{74.0}
+\expandafter\def\csname res@wiki/e5/pool/urdu\endcsname{98.0}
+\expandafter\def\csname res@wiki/e5/enshare\endcsname{31}
+\expandafter\def\csname res@wiki/e5/enshare/english\endcsname{95}
+\expandafter\def\csname res@wiki/openai/none\endcsname{51.5}
+\expandafter\def\csname res@wiki/openai/none/disagree\endcsname{14.5}
+\expandafter\def\csname res@wiki/openai/normalize\endcsname{37.2}
+\expandafter\def\csname res@wiki/openai/normalize/disagree\endcsname{8.5}
+\expandafter\def\csname res@wiki/openai/translit\endcsname{79.5}
+\expandafter\def\csname res@wiki/openai/translit/disagree\endcsname{4.5}
+\expandafter\def\csname res@wiki/openai/translit_hybrid\endcsname{91.5}
+\expandafter\def\csname res@wiki/openai/translit_hybrid/disagree\endcsname{1.5}
+\expandafter\def\csname res@wiki/openai/urdu\endcsname{84.0}
+\expandafter\def\csname res@wiki/openai/english\endcsname{45.5}
+\expandafter\def\csname res@wiki/openai/drop\endcsname{32.5}
+\expandafter\def\csname res@wiki/openai/pool\endcsname{77.3}
+\expandafter\def\csname res@wiki/openai/pool/urdu\endcsname{86.5}
+\expandafter\def\csname res@wiki/openai/enshare\endcsname{74}
+\expandafter\def\csname res@wiki/openai/enshare/english\endcsname{81}
+\expandafter\def\csname res@bb/bm25/urdu\endcsname{79.9}
+\expandafter\def\csname res@bb/bm25/english\endcsname{6.1}
+\expandafter\def\csname res@bb/bm25/roman\endcsname{5.2}
+\expandafter\def\csname res@bb/bm25/roman_translit_open\endcsname{32.1}
+\expandafter\def\csname res@bb/bm25/roman_translit_m2m\endcsname{52.0}
+\expandafter\def\csname res@bb/bm25/drop\endcsname{74.7}
+\expandafter\def\csname res@bb/bge-m3/urdu\endcsname{94.3}
+\expandafter\def\csname res@bb/bge-m3/english\endcsname{94.2}
+\expandafter\def\csname res@bb/bge-m3/roman\endcsname{43.0}
+\expandafter\def\csname res@bb/bge-m3/roman_translit_open\endcsname{63.8}
+\expandafter\def\csname res@bb/bge-m3/roman_translit_open_hybrid\endcsname{60.6}
+\expandafter\def\csname res@bb/bge-m3/roman_translit_m2m\endcsname{76.0}
+\expandafter\def\csname res@bb/bge-m3/roman_translit_m2m_hybrid\endcsname{73.0}
+\expandafter\def\csname res@bb/bge-m3/drop\endcsname{51.3}
+\expandafter\def\csname res@bb/e5/urdu\endcsname{93.7}
+\expandafter\def\csname res@bb/e5/english\endcsname{95.8}
+\expandafter\def\csname res@bb/e5/roman\endcsname{53.7}
+\expandafter\def\csname res@bb/e5/roman_translit_open\endcsname{66.1}
+\expandafter\def\csname res@bb/e5/roman_translit_open_hybrid\endcsname{64.9}
+\expandafter\def\csname res@bb/e5/roman_translit_m2m\endcsname{76.6}
+\expandafter\def\csname res@bb/e5/roman_translit_m2m_hybrid\endcsname{74.1}
+\expandafter\def\csname res@bb/e5/drop\endcsname{40.0}
+\expandafter\def\csname res@tq/wiki/gpt-4o-mini/word_jaccard\endcsname{89}
+\expandafter\def\csname res@tq/wiki/gpt-4o-mini/char_similarity\endcsname{98}
+\expandafter\def\csname res@tq/wiki/gpt-4o-mini/exact_words\endcsname{46}
+\expandafter\def\csname res@tq/wiki/gpt-4o-mini/foreign_script\endcsname{0.0}
+\expandafter\def\csname res@tq/wiki/qwen2.5-7b/word_jaccard\endcsname{44}
+\expandafter\def\csname res@tq/wiki/qwen2.5-7b/char_similarity\endcsname{81}
+\expandafter\def\csname res@tq/wiki/qwen2.5-7b/exact_words\endcsname{0}
+\expandafter\def\csname res@tq/wiki/qwen2.5-7b/foreign_script\endcsname{27.3}
+\expandafter\def\csname res@tq/belebele/qwen2.5-7b/word_jaccard\endcsname{24}
+\expandafter\def\csname res@tq/belebele/qwen2.5-7b/char_similarity\endcsname{57}
+\expandafter\def\csname res@tq/belebele/qwen2.5-7b/exact_words\endcsname{0}
+\expandafter\def\csname res@tq/belebele/qwen2.5-7b/foreign_script\endcsname{32.2}
+\expandafter\def\csname res@tq/wiki/m2m100/word_jaccard\endcsname{72}
+\expandafter\def\csname res@tq/wiki/m2m100/char_similarity\endcsname{95}
+\expandafter\def\csname res@tq/wiki/m2m100/exact_words\endcsname{10}
+\expandafter\def\csname res@tq/wiki/m2m100/foreign_script\endcsname{0.0}
+\expandafter\def\csname res@tq/belebele/m2m100/word_jaccard\endcsname{29}
+\expandafter\def\csname res@tq/belebele/m2m100/char_similarity\endcsname{64}
+\expandafter\def\csname res@tq/belebele/m2m100/exact_words\endcsname{0}
+\expandafter\def\csname res@tq/belebele/m2m100/foreign_script\endcsname{0.0}
+\expandafter\def\csname res@tq/sec/qwen2.5-7b_median\endcsname{2.0}
+\expandafter\def\csname res@tq/sec/m2m100_cpu_median\endcsname{2.0}
+\expandafter\def\csname res@err/bm25/pairs\endcsname{600}
+\expandafter\def\csname res@err/bm25/roman_misses\endcsname{594}
+\expandafter\def\csname res@err/bm25/roman_misses_recovered_by_translit\endcsname{572}
+\expandafter\def\csname res@err/bm25/translit_misses\endcsname{22}
+\expandafter\def\csname res@err/bm25/translit_misses_where_urdu_also_misses\endcsname{9}
+\expandafter\def\csname res@err/bm25/translit_hits_where_roman_hit_but_translit_missed\endcsname{0}
+\expandafter\def\csname res@err/bge-m3/pairs\endcsname{600}
+\expandafter\def\csname res@err/bge-m3/roman_misses\endcsname{360}
+\expandafter\def\csname res@err/bge-m3/roman_misses_recovered_by_translit\endcsname{330}
+\expandafter\def\csname res@err/bge-m3/translit_misses\endcsname{32}
+\expandafter\def\csname res@err/bge-m3/translit_misses_where_urdu_also_misses\endcsname{6}
+\expandafter\def\csname res@err/bge-m3/translit_hits_where_roman_hit_but_translit_missed\endcsname{2}
+\expandafter\def\csname res@err/e5/pairs\endcsname{600}
+\expandafter\def\csname res@err/e5/roman_misses\endcsname{187}
+\expandafter\def\csname res@err/e5/roman_misses_recovered_by_translit\endcsname{176}
+\expandafter\def\csname res@err/e5/translit_misses\endcsname{17}
+\expandafter\def\csname res@err/e5/translit_misses_where_urdu_also_misses\endcsname{9}
+\expandafter\def\csname res@err/e5/translit_hits_where_roman_hit_but_translit_missed\endcsname{6}
+\expandafter\def\csname res@err/openai/pairs\endcsname{600}
+\expandafter\def\csname res@err/openai/roman_misses\endcsname{291}
+\expandafter\def\csname res@err/openai/roman_misses_recovered_by_translit\endcsname{183}
+\expandafter\def\csname res@err/openai/translit_misses\endcsname{123}
+\expandafter\def\csname res@err/openai/translit_misses_where_urdu_also_misses\endcsname{93}
+\expandafter\def\csname res@err/openai/translit_hits_where_roman_hit_but_translit_missed\endcsname{15}
+\makeatother

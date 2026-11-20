@@ -9,6 +9,12 @@ def test_gold_rank_counts_better_scored_passages():
     assert list(gold_ranks(scores, [2, 0])) == [2, 1]
 
 
+def test_ties_count_against_the_gold_passage():
+    # A query that matches nothing scores every passage 0; that must not be a hit.
+    scores = np.zeros((1, 10))
+    assert list(gold_ranks(scores, [3])) == [10]
+
+
 def test_hits_and_mrr():
     ranks = np.array([1, 3, 12])
     assert list(hits(ranks)) == [1.0, 1.0, 0.0]

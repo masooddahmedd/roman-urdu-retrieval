@@ -1,0 +1,13 @@
+\section{Per-spelling results}
+\label{app:spellings}
+\begin{table}[h]\centering\small\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrr}\toprule
+Retriever & Sp.\,1 & Sp.\,2 & Sp.\,3 & MRR Urdu & MRR Roman \\
+\midrule
+BM25 & 1.0 & 1.0 & 1.0 & 0.929 & 0.004 \\
+bge-m3 & 41.0 & 39.5 & 39.5 & 0.903 & 0.291 \\
+mE5-large-instruct & 69.5 & 67.5 & 69.5 & 0.906 & 0.537 \\
+OpenAI-3-large & 51.0 & 52.0 & 51.5 & 0.726 & 0.357 \\
+\bottomrule\end{tabular}
+\caption{Recall@5 (\%) for each of the three Roman Urdu spellings and MRR@10, Wikipedia test set, no fix.}
+\end{table}

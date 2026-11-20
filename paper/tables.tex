@@ -1,0 +1,46 @@
+\begin{table*}[t]\centering\small
+\begin{tabular}{lrrrrrr}\toprule
+Retriever & Urdu & English & Roman (mean of 3) & Drop & Disagree & Roman, Urdu-only pool \\
+\midrule
+BM25 & 98.5 & 1.0 & 1.0 {\scriptsize [0, 2]} & 97.5 & 0.0 & 8.7 \\
+bge-m3 & 99.0 & 80.5 & 40.0 {\scriptsize [34, 47]} & 59.0 & 9.0 & 57.8 \\
+mE5-large-instruct & 98.0 & 16.5 & 68.8 {\scriptsize [63, 75]} & 29.2 & 12.5 & 74.0 \\
+OpenAI-3-large & 84.0 & 45.5 & 51.5 {\scriptsize [45, 58]} & 32.5 & 14.5 & 77.3 \\
+\bottomrule\end{tabular}
+\caption{Recall@5 (\%) on the \WikiNTest{} Wikipedia test questions, no fix. Roman is the mean over three spellings with a 95\% bootstrap interval. Drop is Urdu minus Roman, in points. Disagree is the share of questions where one spelling hits and another misses. The last column removes the English passages from the pool.}\label{tab:wiki}
+\end{table*}
+
+\begin{table*}[t]\centering\small
+\begin{tabular}{lrrrrrrrr}\toprule
+Retriever & None & Rules & gpt-4o-mini & Qwen2.5-7B & m2m100 & Hybrid (gpt) & Hybrid (m2m) & \textit{Urdu script} \\
+\midrule
+BM25 & 1.0 & 0.7 & 96.3 & 68.0 & 91.8 & -- & -- & 98.5 \\
+bge-m3 & 40.0 & 35.2 & 94.7 & 81.7 & 91.8 & 96.5 & 94.7 & 99.0 \\
+mE5-large-instruct & 68.8 & 63.8 & 97.2 & 85.7 & 93.0 & 96.3 & 96.3 & 98.0 \\
+OpenAI-3-large & 51.5 & 37.2 & 79.5 & -- & -- & 91.5 & -- & 84.0 \\
+\bottomrule\end{tabular}
+\caption{Roman Urdu Recall@5 (\%) on the Wikipedia test questions after each fix (mean over three spellings). The last column is the same retriever on the Urdu-script question, the ceiling a perfect transliteration would reach.}\label{tab:fixes}
+\end{table*}
+
+\begin{table}[t]\centering\small\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrrr}\toprule
+Retriever & Urdu & English & Roman & +Qwen2.5-7B & +m2m100 \\
+\midrule
+BM25 & 79.9 & 6.1 & 5.2 & 32.1 & 52.0 \\
+bge-m3 & 94.3 & 94.2 & 43.0 & 63.8 & 76.0 \\
+mE5-large-instruct & 93.7 & 95.8 & 53.7 & 66.1 & 76.6 \\
+\bottomrule\end{tabular}
+\caption{Recall@5 (\%) on the Belebele retrieval split (\BbNQueries{} questions, \BbNPassages{} Urdu-script passages, human-romanized Roman Urdu).}\label{tab:belebele}
+\end{table}
+
+\begin{table}[t]\centering\small\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrr}\toprule
+& \multicolumn{2}{c}{Wikipedia} & \multicolumn{2}{c}{Belebele} \\
+Transliterator & Words & Foreign & Words & Foreign \\
+\midrule
+gpt-4o-mini & 89 & 0.0 & -- & -- \\
+qwen2.5-7b & 44 & 27.3 & 24 & 32.2 \\
+m2m100 & 72 & 0.0 & 29 & 0.0 \\
+\bottomrule\end{tabular}
+\caption{Transliteration quality against the Urdu-script version of each question. Words is the mean word overlap (Jaccard, \%) after Arabic-letter folding; Foreign is the share of outputs containing Devanagari, Cyrillic or other non-Arabic letters (\%). On Belebele the reference is worded differently from the Roman Urdu question, so overlap is low for any transliterator.}\label{tab:translit}
+\end{table}

@@ -1,0 +1,50 @@
+# bge-m3 misses after transliteration, lowest overlap first
+
+- q137 roman_1: ranks urdu 2, roman 26, translit 7, overlap 0.47
+  - roman: Kis Ataliyi Koh Pemaon ne 31 July 1954 ko K2 ko pehli baar sar kiya?
+  - translit: کس اتالیق کو پیماون نے 31 جولائی 1954 کو K2 کو پہلی بار سر کیا؟
+  - urdu: کس اطالوی کوہ پیماؤں نے 31 جولائی 1954ء کو کے ٹو کو پہلی بار سر کیا؟
+- q137 roman_3: ranks urdu 2, roman 26, translit 7, overlap 0.47
+  - roman: Kis Ataliy Ko Pemaon ne 31 July 1954 ko K2 ko pehli baar sar kiya?
+  - translit: کس اتالیق کو پیماون نے 31 جولائی 1954 کو K2 کو پہلی بار سر کیا؟
+  - urdu: کس اطالوی کوہ پیماؤں نے 31 جولائی 1954ء کو کے ٹو کو پہلی بار سر کیا؟
+- q233 roman_3: ranks urdu 1, roman 15, translit 24, overlap 0.58
+  - roman: Mehrgarh ke qareeb kis ne maharin athriyat ko qadeem ashya ki mojoodgi ki ittila dee?
+  - translit: مہرگڑھ کے قریب کس نے ماہرین آثار قدیمہ کو قدیم اشیاء کی موجودگی کی اطلاع دی؟
+  - urdu: مہر گڑھ کے قریب کس نے ماہرین اثریات کو قدیم اشیا کی موجودگی کی اطلاع دی؟
+- q233 roman_1: ranks urdu 1, roman 9, translit 20, overlap 0.61
+  - roman: Mehrgarh ke qareeb kis ne maharin asriyat ko qadeem ashya ki mojoodgi ki ittila di?
+  - translit: مہرگڑھ کے قریب کس نے ماہرینِ اسریات کو قدیم اشیاء کی موجودگی کی اطلاع دی؟
+  - urdu: مہر گڑھ کے قریب کس نے ماہرین اثریات کو قدیم اشیا کی موجودگی کی اطلاع دی؟
+- q137 roman_2: ranks urdu 2, roman 20, translit 9, overlap 0.61
+  - roman: Kis Italian Koh Pemaon nay 31 July 1954 ko K2 ko pehli bar sar kiya?
+  - translit: کس اطالوی کوہ پیما نے 31 جولائی 1954 کو K2 کو پہلی بار سر کیا؟
+  - urdu: کس اطالوی کوہ پیماؤں نے 31 جولائی 1954ء کو کے ٹو کو پہلی بار سر کیا؟
+- q264 roman_2: ranks urdu 1, roman 168, translit 9, overlap 0.64
+  - roman: Mian Nasir Muhammad ki masjid ki taamir-e-nau kab hui?
+  - translit: میان ناصر محمد کی مسجد کی تعمیر نو کب ہوئی؟
+  - urdu: میاں نصیر محمد کی مسجد کی تعمیرِ نو کب ہوئی؟
+- q264 roman_3: ranks urdu 1, roman 202, translit 9, overlap 0.64
+  - roman: Mian Nasir Mohammad ki masjid ki taamir-e-nau kab hui?
+  - translit: میان ناصر محمد کی مسجد کی تعمیر نو کب ہوئی؟
+  - urdu: میاں نصیر محمد کی مسجد کی تعمیرِ نو کب ہوئی؟
+- q286 roman_1: ranks urdu 1, roman 300, translit 6, overlap 0.70
+  - roman: Gawar-Bati zuban ke kitne mutakallimeen Pakistan mein hain?
+  - translit: گاور-بتی زبان کے کتنے متکلمین پاکستان میں ہیں؟
+  - urdu: گواربتی زبان کے کتنے متکلمین پاکستان میں ہیں؟
+- q286 roman_2: ranks urdu 1, roman 624, translit 6, overlap 0.70
+  - roman: Gawar-Bati zuban kay kitnay mutakallimeen Pakistan main hain?
+  - translit: گاور-بتی زبان کے کتنے متکلمین پاکستان میں ہیں؟
+  - urdu: گواربتی زبان کے کتنے متکلمین پاکستان میں ہیں؟
+- q286 roman_3: ranks urdu 1, roman 241, translit 6, overlap 0.70
+  - roman: Gawar-Bati zuban k kitne mutakallimeen Pakistan mein hain?
+  - translit: گاور-بتی زبان کے کتنے متکلمین پاکستان میں ہیں؟
+  - urdu: گواربتی زبان کے کتنے متکلمین پاکستان میں ہیں؟
+- q233 roman_2: ranks urdu 1, roman 25, translit 11, overlap 0.71
+  - roman: Mehrgarh ke kareeb kis nay mahirin asriyat ko qadeem ashya ki mojoodgi ki ittila di?
+  - translit: مہرگڑھ کے قریب کس نے ماہرین اثریات کو قدیم اشیاء کی موجودگی کی اطلاع دی؟
+  - urdu: مہر گڑھ کے قریب کس نے ماہرین اثریات کو قدیم اشیا کی موجودگی کی اطلاع دی؟
+- q150 roman_2: ranks urdu 4, roman 93, translit 8, overlap 0.72
+  - roman: Mohanjodaro ki tehzeeb mein istemal hone wala mayari wazaan aur paimaish ka nizaam kya tha?
+  - translit: موہنجو داڑو کی تہذیب میں استعمال ہونے والا معیاری وزن اور پیمائش کا نظام کیا تھا؟
+  - urdu: موہنجوداڑو کی تہذیب میں استعمال ہونے والا معیاری اوزان اور پیمائش کا نظام کیا تھا؟

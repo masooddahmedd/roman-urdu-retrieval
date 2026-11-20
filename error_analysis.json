@@ -1,0 +1,95 @@
+{
+ "translit_vs_urdu_token_jaccard": {
+  "mean": 0.8874585968209487,
+  "exact_share": 0.46166666666666667,
+  "char_ratio_mean": 0.9839643336597156
+ },
+ "bm25": {
+  "pairs": 600,
+  "roman_misses": 594,
+  "roman_misses_recovered_by_translit": 572,
+  "translit_misses": 22,
+  "translit_misses_where_urdu_also_misses": 9,
+  "translit_hits_where_roman_hit_but_translit_missed": 0,
+  "translit_recall_by_overlap_bucket": {
+   "0.0-0.5": {
+    "n": 2,
+    "recall@5": 1.0
+   },
+   "0.5-0.8": {
+    "n": 127,
+    "recall@5": 0.8976377952755905
+   },
+   "0.8-1.0": {
+    "n": 471,
+    "recall@5": 0.9808917197452229
+   }
+  }
+ },
+ "bge-m3": {
+  "pairs": 600,
+  "roman_misses": 360,
+  "roman_misses_recovered_by_translit": 330,
+  "translit_misses": 32,
+  "translit_misses_where_urdu_also_misses": 6,
+  "translit_hits_where_roman_hit_but_translit_missed": 2,
+  "translit_recall_by_overlap_bucket": {
+   "0.0-0.5": {
+    "n": 2,
+    "recall@5": 0.0
+   },
+   "0.5-0.8": {
+    "n": 127,
+    "recall@5": 0.8661417322834646
+   },
+   "0.8-1.0": {
+    "n": 471,
+    "recall@5": 0.9723991507430998
+   }
+  }
+ },
+ "e5": {
+  "pairs": 600,
+  "roman_misses": 187,
+  "roman_misses_recovered_by_translit": 176,
+  "translit_misses": 17,
+  "translit_misses_where_urdu_also_misses": 9,
+  "translit_hits_where_roman_hit_but_translit_missed": 6,
+  "translit_recall_by_overlap_bucket": {
+   "0.0-0.5": {
+    "n": 2,
+    "recall@5": 0.0
+   },
+   "0.5-0.8": {
+    "n": 127,
+    "recall@5": 0.9763779527559056
+   },
+   "0.8-1.0": {
+    "n": 471,
+    "recall@5": 0.9745222929936306
+   }
+  }
+ },
+ "openai": {
+  "pairs": 600,
+  "roman_misses": 291,
+  "roman_misses_recovered_by_translit": 183,
+  "translit_misses": 123,
+  "translit_misses_where_urdu_also_misses": 93,
+  "translit_hits_where_roman_hit_but_translit_missed": 15,
+  "translit_recall_by_overlap_bucket": {
+   "0.0-0.5": {
+    "n": 2,
+    "recall@5": 0.0
+   },
+   "0.5-0.8": {
+    "n": 127,
+    "recall@5": 0.7322834645669292
+   },
+   "0.8-1.0": {
+    "n": 471,
+    "recall@5": 0.8152866242038217
+   }
+  }
+ }
+}

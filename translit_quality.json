@@ -1,0 +1,45 @@
+{
+ "wiki": {
+  "gpt-4o-mini": {
+   "n": 600,
+   "word_jaccard": 0.8874585968209487,
+   "char_similarity": 0.9839643336597156,
+   "exact_words": 0.46166666666666667,
+   "foreign_script": 0.0
+  },
+  "qwen2.5-7b": {
+   "n": 600,
+   "word_jaccard": 0.4400132145608578,
+   "char_similarity": 0.8109361913181701,
+   "exact_words": 0.0033333333333333335,
+   "foreign_script": 0.2733333333333333
+  },
+  "m2m100": {
+   "n": 600,
+   "word_jaccard": 0.7228369450049857,
+   "char_similarity": 0.9497664876473897,
+   "exact_words": 0.105,
+   "foreign_script": 0.0
+  }
+ },
+ "belebele": {
+  "qwen2.5-7b": {
+   "n": 900,
+   "word_jaccard": 0.24037918055990617,
+   "char_similarity": 0.5721586310143366,
+   "exact_words": 0.0011111111111111111,
+   "foreign_script": 0.32222222222222224
+  },
+  "m2m100": {
+   "n": 900,
+   "word_jaccard": 0.28707320580116025,
+   "char_similarity": 0.6434946442304216,
+   "exact_words": 0.0011111111111111111,
+   "foreign_script": 0.0
+  }
+ },
+ "seconds_per_query": {
+  "qwen2.5-7b_median": 2.014,
+  "m2m100_cpu_median": 1.9732346832752228
+ }
+}
