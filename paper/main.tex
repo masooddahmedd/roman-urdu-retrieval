@@ -17,20 +17,20 @@
 
 \title{Roman Urdu Breaks Dense Retrieval:\\Script, Spelling Variation and a Transliteration Fix}
 
-\author{Masood Ahmad \\
-  \textcolor{red}{[AFFILIATION?]}, Islamabad, Pakistan \\
-  \texttt{\textcolor{red}{[EMAIL?]}}}
+\author{Masood Ahmed \\
+  Independent researcher, Islamabad, Pakistan \\
+  \texttt{masoodd.ahmedd123@gmail.com}}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Most Urdu speakers type Urdu in the Latin script (Roman Urdu), and nobody spells it the same way twice, while the text they want to search is written in Urdu script. We measure what this does to retrieval. On a new set of \WikiNTest{} test questions over \WikiNPassages{} Wikipedia passages, each question asked in Urdu script, in English and in three Roman Urdu spellings, every dense embedder we test loses between \WikiDropMin{} and \WikiDropMax{} points of Recall@5 when the question moves from Urdu script to Roman Urdu, and BM25 finds almost nothing. A second test with human-written Roman Urdu questions from Belebele shows a similar gap (\BbDropMin{} to \BbDropMax{} points), although there the Roman Urdu is also worded differently. Spelling variation is a smaller effect than script, but for up to \WikiDisagreeMax{} of questions one spelling finds the answer and another misses it. Rule-based spelling normalization makes things worse. Transliterating the query into Urdu script before searching closes most of the gap: with an LLM transliterator the best embedders come within a few points of their Urdu-script score, and a small open transliteration model recovers \MtwoMShare{} of the LLM's gain without an API call, while a general 7B open LLM does markedly worse. We release the question set and code.
+Much everyday Urdu is typed in the Latin script (Roman Urdu), with no standard spelling, while the text they want to search is written in Urdu script. We measure what this does to retrieval. On a new set of \WikiNTest{} test questions over \WikiNPassages{} Wikipedia passages, each question asked in Urdu script, in English and in three Roman Urdu spellings, every dense embedder we test loses between \WikiDropMin{} and \WikiDropMax{} points of Recall@5 when the question moves from Urdu script to Roman Urdu, and BM25 finds almost nothing. A second test with human-written Roman Urdu questions from Belebele shows a similar gap (\BbDropMin{} to \BbDropMax{} points), although there the Roman Urdu is also worded differently. Spelling variation is a smaller effect than script, but for up to \WikiDisagreeMax{} of questions one spelling finds the answer and another misses it. Rule-based spelling normalization makes things worse. Transliterating the query into Urdu script before searching closes most of the gap: with an LLM transliterator the best embedders come within a few points of their Urdu-script score, and a small open transliteration model recovers \MtwoMShare{} of the LLM's gain without an API call, while a general 7B open LLM does markedly worse. We release the question set and code.
 \end{abstract}
 
 \section{Introduction}
 
-Urdu has over 200 million speakers, and most of them type it on phones and keyboards in the Latin script. ``Kya Lahore mein aaj barish hogi?'' is how a question about rain in Lahore actually gets typed; the Urdu-script form is reserved for formal text. This Latin-script Urdu, Roman Urdu, has no standard spelling: the same word appears as \textit{kya}, \textit{kia} and \textit{kyaa}, \textit{hai} and \textit{hay}, \textit{mein} and \textit{main}.
+Urdu is spoken by well over a hundred million people, and on phones and social media much of it is typed in the Latin script. ``Kya Lahore mein aaj barish hogi?'' is how a question about rain in Lahore actually gets typed; the Urdu-script form is reserved for formal text. This Latin-script Urdu, Roman Urdu, has no standard spelling: the same word appears as \textit{kya}, \textit{kia} and \textit{kyaa}, \textit{hai} and \textit{hay}, \textit{mein} and \textit{main}.
 
 The documents a search or retrieval-augmented generation (RAG) system would retrieve, on the other hand, are mostly in Urdu script: news, Wikipedia, government and religious text. A Roman Urdu question against an Urdu-script index is therefore a cross-script problem first and a spelling problem second. Lexical retrievers fail by construction, since the two scripts share no characters. Multilingual dense embedders are trained mostly on native-script text, and how well they bridge the gap has, to our knowledge, not been measured for Urdu.
 
@@ -88,7 +88,7 @@ The Wikipedia questions are LLM-drafted and their spellings are not attested typ
 Typing Urdu in the Latin script costs current embedders between a third and almost all of their retrieval quality, and most of that is the script, not the spelling. The fix is cheap and model-agnostic: convert the query to Urdu script before searching. Teams building search or RAG for Pakistani users should transliterate Roman Urdu queries, and embedding benchmarks for South Asian languages should include romanized queries.
 
 \section*{Use of AI}
-Experiments were run and this manuscript was drafted with the help of an AI coding assistant; the author checked every number against the released result files and is responsible for the content. The benchmark questions were drafted by GPT-4o as described above.
+Experiments were run and this manuscript was drafted with the help of an AI coding assistant; every number in the paper is generated by the released scripts from the released result files, and the author is responsible for the content. The benchmark questions were drafted by GPT-4o as described above.
 
 \bibliography{references}
 
